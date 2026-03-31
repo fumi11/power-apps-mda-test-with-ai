@@ -1,0 +1,35 @@
+{
+  "name": "power-apps-mda-test-with-ai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:list": "npx playwright test --list",
+    "test:report": "npx playwright show-report",
+    "metadata:extract": "npx ts-node src/metadata/extractor.ts",
+    "generate": "npx ts-node src/generator/generator.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fumi11/power-apps-mda-test-with-ai.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/fumi11/power-apps-mda-test-with-ai/issues"
+  },
+  "homepage": "https://github.com/fumi11/power-apps-mda-test-with-ai#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.2"
+  },
+  "dependencies": {
+    "@azure/msal-node": "^5.1.1",
+    "dotenv": "^17.3.1",
+    "openai": "^6.33.0"
+  }
+}
