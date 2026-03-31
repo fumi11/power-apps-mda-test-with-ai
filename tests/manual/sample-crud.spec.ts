@@ -11,21 +11,25 @@ import { DialogPage } from '../../src/pages/dialog.page';
  * Prerequisites:
  * - MDA_URL, MDA_USERNAME, MDA_PASSWORD are configured in .env
  * - auth.setup.ts has run and storageState is saved
+ *
+ * Tests run in serial order within the describe block.
+ * The Delete test cleans up the record created in the Create test.
  */
 
 const TEST_ACCOUNT_NAME = `Test Account ${Date.now()}`;
+const UPDATED_ACCOUNT_NAME = `${TEST_ACCOUNT_NAME} - Updated`;
 
 test.describe('Account CRUD Operations', () => {
+  test.describe.configure({ mode: 'serial' });
+
   let appShell: AppShellPage;
   let form: FormPage;
   let view: ViewPage;
-  let dialog: DialogPage;
 
   test.beforeEach(async ({ page }) => {
     appShell = new AppShellPage(page);
     form = new FormPage(page);
     view = new ViewPage(page);
-    dialog = new DialogPage(page);
   });
 
   test('Create a new Account record', async ({ page }) => {
@@ -74,8 +78,7 @@ test.describe('Account CRUD Operations', () => {
     await view.openRecordByName(TEST_ACCOUNT_NAME);
 
     // Update fields
-    const updatedName = `${TEST_ACCOUNT_NAME} - Updated`;
-    await form.setTextField('name', updatedName);
+    await form.setTextField('name', UPDATED_ACCOUNT_NAME);
     await form.setTextField('description', 'Updated by automated test');
 
     // Save
@@ -83,16 +86,16 @@ test.describe('Account CRUD Operations', () => {
 
     // Verify
     const title = page.locator('[data-id="header_title"]');
-    await expect(title).toContainText(updatedName);
+    await expect(title).toContainText(UPDATED_ACCOUNT_NAME);
   });
 
   test('Delete an Account record', async ({ page }) => {
-    // Navigate to Accounts
+    // Navigate to Accounts — search for the updated name
     await appShell.navigateToSubArea('Accounts');
-    await view.quickSearch(TEST_ACCOUNT_NAME);
-    await view.openRecordByName(TEST_ACCOUNT_NAME);
+    await view.quickSearch(UPDATED_ACCOUNT_NAME);
+    await view.openRecordByName(UPDATED_ACCOUNT_NAME);
 
-    // Delete the record
+    // Delete the record (cleans up test data)
     await form.deleteRecord();
 
     // Verify: should return to the list view
